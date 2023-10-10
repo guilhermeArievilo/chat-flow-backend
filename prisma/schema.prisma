@@ -6,6 +6,69 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Chat {
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  isBroadcastList Boolean?
+  interlocutors   Conversation[]
+}
+
+model Conversation {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  Chat        Chat?      @relation(fields: [chatId], references: [id])
+  chatId      Int?
+  Customer    Customer?  @relation(fields: [customerId], references: [id])
+  customerId  Int?
+  Attendant   Attendant? @relation(fields: [attendantId], references: [id])
+  attendantId Int?
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  status    String
+  value     Float
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  author    String
+  recipient String
+}
+
+model ProfilePicThumb {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  img        String?
+  imgFull    String?
+  tag        String?
+  imgId      String?  @unique
+  eurl       String?
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int      @unique
+}
+
+model Customer {
+  id                      Int              @id @default(autoincrement())
+  createdAt               DateTime         @default(now())
+  externalId              String           @unique
+  name                    String
+  profilePicThumbObjProps ProfilePicThumb?
+  conversations           Conversation[]
+}
+
+model Attendant {
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  photoUrl      String?
+  conversations Conversation[]
+  email         String
+  password      String
+  name          String
 }
