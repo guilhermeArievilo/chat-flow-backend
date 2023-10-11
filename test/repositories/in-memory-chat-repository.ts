@@ -53,7 +53,7 @@ export class InMemoryChatRepository implements ChatRepository {
 
   async findByCostumer(customerId: string): Promise<Chat[] | null> {
     const chat = await this.chats.filter((chat) => {
-      return chat.customers.find((customer) => customer === customerId);
+      return chat.customers?.find((customer) => customer === customerId);
     });
     if (!chat) return null;
     return chat;

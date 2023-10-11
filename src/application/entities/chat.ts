@@ -2,8 +2,8 @@ import { Entity } from './entitiy';
 
 export interface ChatProps {
   name?: string;
-  attendants: string[];
-  customers: string[];
+  attendants?: string[];
+  customers?: string[];
   isBroadcastList?: boolean;
   order?: string;
 }
@@ -15,7 +15,7 @@ export class Chat extends Entity {
     super({ id, createdAt });
     this.props = props;
 
-    if (this.customers.length > 1) {
+    if (this.customers && this.customers.length > 1) {
       this.props.isBroadcastList = true;
     } else {
       this.props.isBroadcastList = false;
@@ -30,7 +30,7 @@ export class Chat extends Entity {
     this.props.name = name;
   }
 
-  public get attendants(): string[] {
+  public get attendants(): string[] | undefined {
     return this.props.attendants;
   }
 
@@ -38,7 +38,7 @@ export class Chat extends Entity {
     this.props.attendants = attendants;
   }
 
-  public get customers(): string[] {
+  public get customers(): string[] | undefined {
     return this.props.customers;
   }
 
