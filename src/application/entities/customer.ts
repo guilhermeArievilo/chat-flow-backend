@@ -9,7 +9,7 @@ interface ProfilePicThumbObjProps {
 }
 
 export interface CustomerProps {
-  savedContact: string;
+  contact: string;
   profilePicThumbObjProps?: ProfilePicThumbObjProps;
   name?: string;
 }
@@ -30,12 +30,12 @@ export class Costumer extends Entity {
     this.props.name = name;
   }
 
-  public get savedContact(): string {
-    return this.props.savedContact;
+  public get contact(): string {
+    return this.props.contact;
   }
 
-  public set savedContact(contact: string) {
-    this.props.savedContact = contact;
+  public set contact(contact: string) {
+    this.props.contact = contact;
   }
 
   public get profilePicThumbObjProps(): ProfilePicThumbObjProps | undefined {

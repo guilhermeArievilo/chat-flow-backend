@@ -2,10 +2,11 @@ import { Entity } from './entitiy';
 
 export interface ChatProps {
   name?: string;
-  attendants?: string[];
-  customers?: string[];
+  attendants: string[];
+  customers: string[];
   isBroadcastList?: boolean;
   order?: string;
+  externalChatId?: string;
 }
 
 export class Chat extends Entity {
@@ -30,7 +31,7 @@ export class Chat extends Entity {
     this.props.name = name;
   }
 
-  public get attendants(): string[] | undefined {
+  public get attendants(): string[] {
     return this.props.attendants;
   }
 
@@ -38,7 +39,7 @@ export class Chat extends Entity {
     this.props.attendants = attendants;
   }
 
-  public get customers(): string[] | undefined {
+  public get customers(): string[] {
     return this.props.customers;
   }
 
@@ -57,5 +58,9 @@ export class Chat extends Entity {
 
   public set order(order: string) {
     this.props.order = order;
+  }
+
+  public get externalChatId(): string | undefined {
+    return this.props.externalChatId;
   }
 }

@@ -10,10 +10,13 @@ export interface PaginationResponse {
 }
 
 export abstract class ChatRepository {
-  abstract create(chat: Chat): Promise<void>;
+  abstract create(chat: Chat): Promise<Chat>;
   abstract findByid(id: string): Promise<Chat | null>;
   abstract get(
     pagination: PaginationProps,
   ): Promise<{ data: Chat[]; pagination: PaginationResponse } | null>;
-  abstract findByCostumer(customerId: string): Promise<Chat[] | null>;
+  abstract findByCustomer(customerId: string): Promise<Chat[] | null>;
+  abstract findChatByExternalChatId(
+    externalChatId: string,
+  ): Promise<Chat | null>;
 }

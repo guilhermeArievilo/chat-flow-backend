@@ -8,8 +8,9 @@ import {
 export class InMemoryChatRepository implements ChatRepository {
   public chats: Chat[] = [];
 
-  async create(chat: Chat): Promise<void> {
+  async create(chat: Chat): Promise<Chat> {
     await this.chats.push(chat);
+    return chat;
   }
 
   async findByid(id: string): Promise<Chat | null> {
@@ -51,9 +52,17 @@ export class InMemoryChatRepository implements ChatRepository {
     };
   }
 
-  async findByCostumer(customerId: string): Promise<Chat[] | null> {
+  async findByCustomer(customerId: string): Promise<Chat[] | null> {
     const chat = await this.chats.filter((chat) => {
       return chat.customers?.find((customer) => customer === customerId);
+    });
+    if (!chat) return null;
+    return chat;
+  }
+
+  async findChatByExternalChatId(externalChatId: string): Promise<Chat | null> {
+    const chat = await this.chats.find((chat) => {
+      return chat.externalChatId === externalChatId;
     });
     if (!chat) return null;
     return chat;

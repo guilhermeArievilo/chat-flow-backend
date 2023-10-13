@@ -7,18 +7,33 @@ import {
 import { PrismaService } from '../prisma.service';
 import { Chat as RawChat } from '@prisma/client';
 import { PrismaChatMapper } from '../mappers/prisma-chat-mapper';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PrismaChatRepository implements ChatRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(chat: Chat): Promise<void> {
+  async create(chat: Chat): Promise<Chat> {
+    const attendants = chat.attendants.map((attendant) => ({
+      attendantId: attendant,
+    }));
+    const customers = chat.customers.map((attendant) => ({
+      customerId: attendant,
+    }));
     const raw = PrismaChatMapper.toPrisma(chat);
     try {
-      await this.prisma.chat.create({
-        data: raw,
+      const chat = await this.prisma.chat.create({
+        data: {
+          ...raw,
+          interlocutors: {
+            create: [...attendants, ...customers],
+          },
+        },
       });
+
+      return PrismaChatMapper.toDomain(chat);
     } catch (e) {
-      console.error('[Prisma Chat Repository] - CREATE chat error');
+      throw new Error('[Prisma Chat Repository] - CREATE chat error');
     }
   }
 
@@ -34,8 +49,7 @@ export class PrismaChatRepository implements ChatRepository {
 
       return PrismaChatMapper.toDomain(raw);
     } catch (e) {
-      console.error('[Prisma Chat Repository] - FINDBYID chat error');
-      return null;
+      throw new Error('[Prisma Chat Repository] - FINDBYID chat error');
     }
   }
 
@@ -64,12 +78,11 @@ export class PrismaChatRepository implements ChatRepository {
         },
       };
     } catch (e) {
-      console.error('[Prisma Chat Repository] - GET chat error');
-      return null;
+      throw new Error('[Prisma Chat Repository] - GET chat error');
     }
   }
 
-  async findByCostumer(customerId: string): Promise<Chat[] | null> {
+  async findByCustomer(customerId: string): Promise<Chat[] | null> {
     try {
       const chats = await this.prisma.chat.findMany({
         include: {
@@ -89,8 +102,23 @@ export class PrismaChatRepository implements ChatRepository {
 
       return chatToDomains;
     } catch (e) {
-      console.error('[Prisma Chat Repository] - GET chat error');
-      return null;
+      throw new Error('[Prisma Chat Repository] - GET chat error');
+    }
+  }
+
+  async findChatByExternalChatId(externalChatId: string): Promise<Chat | null> {
+    try {
+      const raw = await this.prisma.chat.findUnique({
+        where: {
+          externalChatId,
+        },
+      });
+
+      if (!raw) return null;
+
+      return PrismaChatMapper.toDomain(raw);
+    } catch (e) {
+      throw new Error('[Prisma Chat Repository] - GET chat error');
     }
   }
 }

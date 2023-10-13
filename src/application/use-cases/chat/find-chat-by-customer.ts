@@ -16,7 +16,7 @@ export class FindChatByCustomer {
   ): Promise<FindChatByCustomerResponse | null> {
     const { customerId } = request;
 
-    const chat = await this.chatRepository.findByCostumer(customerId);
+    const chat = await this.chatRepository.findByCustomer(customerId);
 
     if (!chat) return null;
 

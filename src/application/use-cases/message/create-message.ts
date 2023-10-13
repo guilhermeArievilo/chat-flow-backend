@@ -1,13 +1,13 @@
-import { Chat } from '@application/entities/chat';
 import { Content } from '@application/entities/content';
 import { Message } from '@application/entities/message';
 import { MessageRepository } from '@application/repositories/message-repository';
 
 interface CreateMessageRequest {
   content: Content;
-  chat: Chat;
+  chat: string;
   author: string;
   externalChatId: string;
+  recipient: string;
 }
 
 interface CreateMessageResponse {
@@ -18,14 +18,14 @@ interface CreateMessageResponse {
 export class CreateMessage {
   constructor(private messageRepository: MessageRepository) {}
   async execute(request: CreateMessageRequest): Promise<CreateMessageResponse> {
-    const { content, chat, author, externalChatId } = request;
+    const { content, chat, author, externalChatId, recipient } = request;
 
     const message = new Message({
       author,
-      recipient: chat.customers[0],
       content,
-      chat: chat.id,
+      chat: chat,
       externalChatId,
+      recipient,
     });
 
     try {
