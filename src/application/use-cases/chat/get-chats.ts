@@ -3,6 +3,7 @@ import {
   ChatRepository,
   PaginationProps,
 } from '@application/repositories/chat-repository';
+import { Injectable } from '@nestjs/common';
 
 interface getChatsRequest extends PaginationProps {}
 
@@ -14,7 +15,7 @@ interface getChatsResponse {
     start: number;
   };
 }
-
+@Injectable()
 export class GetChats {
   constructor(private chatRepository: ChatRepository) {}
   async execute(request: getChatsRequest): Promise<getChatsResponse> {

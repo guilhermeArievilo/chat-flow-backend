@@ -41,4 +41,8 @@ export class Attendant extends Entity {
   public get photoUrl(): string | undefined {
     return this.props.photoUrl;
   }
+
+  public get hash(): string {
+    return this.props.hash;
+  }
 }

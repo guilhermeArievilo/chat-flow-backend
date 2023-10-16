@@ -4,6 +4,7 @@ import { Chat } from '@application/entities/chat';
 import { MessageRepository } from '@application/repositories/message-repository';
 import { Content } from '@application/entities/content';
 import { Message } from '@application/entities/message';
+import { Injectable } from '@nestjs/common';
 
 interface SendTextRequest {
   attendant: string;
@@ -16,7 +17,7 @@ interface SendTextResponse {
   status: string;
   error?: string;
 }
-
+@Injectable()
 export class SendText {
   constructor(
     private sendModule: SendModuleTemplate,

@@ -70,7 +70,8 @@ model Attendant {
   createdAt     DateTime       @default(now())
   photoUrl      String?
   conversations Conversation[]
-  email         String
+  email         String         @unique
   password      String
   name          String
+  hash          String         @unique
 }
